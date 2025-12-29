@@ -1,0 +1,157 @@
+
+
+
+
+
+
+
+
+
+
+# --------------------------------------------------------------------------------
+# ---------------------- Sensitive Personal Information --------------------------
+# --------------------------------------------------------------------------------
+report/personal.tex
+report/private.pdf
+
+
+# --------------------------------------------------------------------------------
+# ------------------------- PDF Files (Only public.pdf) --------------------------
+# --------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------
+# Ignore all PDFs
+report/*.pdf
+
+# Exception: Allow public.pdf to be committed
+!report/public.pdf
+
+
+# --------------------------------------------------------------------------------
+# --------------------------- LaTeX Build Artifacts ------------------------------
+# --------------------------------------------------------------------------------
+
+# Auxiliary files
+report/*.aux
+report/*.lof
+report/*.lot
+report/*.fls
+report/*.out
+report/*.toc
+report/*.fmt
+report/*.fot
+report/*.cb
+report/*.cb2
+report/.*.lb
+
+# Index files
+report/*.idx
+report/*.ilg
+report/*.ind
+
+# Bibliography
+report/*.bbl
+report/*.bcf
+report/*.blg
+report/*-blx.aux
+report/*-blx.bib
+report/*.run.xml
+
+# Build tool files
+report/*.fdb_latexmk
+report/*.synctex
+report/*.synctex.gz
+report/*.synctex.gz(busy)
+report/*.pdfsync
+
+# Build directories
+report/build/
+report/.texpadtmp/
+
+# Nomenclature
+report/*.acn
+report/*.acr
+report/*.alg
+report/*.glg
+report/*.glo
+report/*.gls
+report/*.glsdefs
+report/*.lzo
+report/*.lzs
+
+# Uncomment if using hyperref
+report/*.brf
+
+# Uncomment if using the glossaries package
+report/*.xdy
+
+# Makeindex log files
+report/*.lpz
+
+# xwatermark package
+report/*.xwm
+
+# REVTeX puts footnotes in the bibliography
+report/*Notes.bib
+
+# Output directories for minted (code highlighting)
+report/_minted-*/
+report/_markdown_*/
+
+# Python-related
+report/*.pytxcode
+report/pythontex-files-*/
+
+# Temp files
+report/*~
+report/*.backup
+report/*.tmp
+report/*.bak
+report/*.swp
+report/*~$*.doc*
+
+
+
+
+# --------------------------------------------------------------------------------
+# ---------------------------- Editor-Specific Files -----------------------------
+# --------------------------------------------------------------------------------
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# LaTeX Workshop
+report/*.synctex(busy)
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+
+# --------------------------------------------------------------------------------
+# ----------------------------- OS-Specific Files --------------------------------
+# --------------------------------------------------------------------------------
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
