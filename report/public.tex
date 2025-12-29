@@ -1,0 +1,9 @@
+% Prevent accidental inclusion of private data
+\ifdefined\PRIVATE
+  \errmessage{ERROR: personal.tex included in PUBLIC build}
+\fi
+
+\newcommand{\StudentName}{REDACTED}
+\newcommand{\CandidateNumber}{XXXX}
+\newcommand{\CentreNumber}{XXXXX}
+\newcommand{\SchoolName}{REDACTED}
