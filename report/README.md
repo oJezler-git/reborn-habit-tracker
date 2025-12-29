@@ -1,0 +1,253 @@
+# Report Overview
+
+To view the report, open `public.pdf`.
+
+The source is written in LaTeX (`main.tex`), chosen for its ability to:
+
+- Typeset complex mathematical equations with precision
+- Automatically manage formatting elements such as tables of contents, numbering, and bibliographies
+- Separate content from design, for high-quality, professional output
+
+The report was initially developed using [Overleaf](https://overleaf.com/), but due to compilation limits, development switched to [Visual Studio Code](https://code.visualstudio.com/) with the [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension.
+
+Note: LaTeX was not learned specifically for this report; I had prior experience.
+
+---
+
+# Building and Editing the Report
+
+If you want to modify the report or explore its structure:
+
+## Prerequisites
+
+- [Visual Studio Code](https://code.visualstudio.com/) (recommended)
+- [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension
+- [MiKTeX](https://miktex.org/) or TeX Live distribution
+- [Strawberry Perl](https://strawberryperl.com/) (for Windows users)
+
+Once installed, editing `main.tex` and saving it will trigger the build process.
+
+## Project Structure
+
+```
+
+reborn-habit-tracker/
+├── report/
+│   ├── main.tex              # Main document (edit this)
+│   ├── main-private.tex      # Private build wrapper (do not edit)
+│   ├── public.tex            # Redacted placeholder data
+│   ├── personal.tex          # Your actual personal data (gitignored)
+│   ├── personal.example.tex  # Template for personal.tex
+│   └── references.bib        # Bibliography with references
+├── .gitignore                # Excludes personal.tex and private.pdf
+└── .vscode/
+    └── settings.json         # LaTeX Workshop configuration
+
+
+```
+
+---
+
+# Private & Public Build Workflow
+
+This section explains how to set up a workflow that separates **private builds** (with real personal data) from **public builds** (with redacted data).
+
+## 1. Create Template Files
+
+### `main-private.tex` (Private build entry point)
+
+```tex
+\def\PRIVATEBUILD{}
+\input{main}
+```
+
+### `public.tex` (Redacted data)
+
+```tex
+\newcommand{\StudentName}{REDACTED}
+\newcommand{\CandidateNumber}{XXXX}
+\newcommand{\CentreNumber}{XXXXX}
+\newcommand{\SchoolName}{REDACTED}
+```
+
+### `personal.example.tex` (Template for contributors)
+
+```tex
+% This file should NOT be included in public builds
+% Copy this to personal.tex and replace with your actual information
+
+\ifdefined\public
+  \errmessage{ERROR: personal.tex included in PUBLIC build}
+\fi
+
+\newcommand{\StudentName}{Your Full Name}
+\newcommand{\CandidateNumber}{Your Candidate Number}
+\newcommand{\CentreNumber}{Your Centre Number}
+\newcommand{\SchoolName}{Your School Name}
+```
+
+### `.gitignore`
+
+```
+# Exclude personal information
+personal.tex
+private.pdf
+
+# Standard LaTeX artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+```
+
+---
+
+## 2. Configure VS Code
+
+`.vscode/settings.json`:
+
+```json
+{
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex-public",
+      "command": "pdflatex",
+      "args": ["-interaction=nonstopmode", "-jobname=public", "main.tex"]
+    },
+    {
+      "name": "pdflatex-private",
+      "command": "pdflatex",
+      "args": [
+        "-interaction=nonstopmode",
+        "-jobname=private",
+        "main-private.tex"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "Public PDF (redacted)",
+      "tools": ["pdflatex-public"]
+    },
+    {
+      "name": "Private PDF (full)",
+      "tools": ["pdflatex-private"]
+    }
+  ],
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.recipe.default": "first"
+}
+```
+
+---
+
+## 3. Update Main Document
+
+Add the following at the top of `main.tex` (before `\documentclass`):
+
+```tex
+\newif\ifpublic
+
+% Default to public for safety
+\publictrue
+
+% Override via private build
+\ifdefined\PRIVATEBUILD
+  \publicfalse
+\fi
+
+\ifpublic
+  \def\public{}
+  \input{public.tex}   % Redacted data
+\else
+  \input{personal.tex} % Full personal data
+\fi
+```
+
+Also mark the main file as root by adding this to the very top of the document:
+
+```tex
+% !TEX root = main.tex
+```
+
+Use the commands throughout the document:
+
+```tex
+\StudentName
+\CandidateNumber
+\CentreNumber
+\SchoolName
+```
+
+---
+
+# Usage
+
+### Contributor Setup
+
+1. Clone the repository
+2. Copy the template: `cp personal.example.tex personal.tex`
+3. Edit `personal.tex` with actual data
+4. **Do not commit** `personal.tex` to version control
+
+### Building Documents
+
+#### Automatic Public Build
+
+- Save `main.tex` (`Ctrl+S`)
+- Output: `public.pdf` (redacted)
+
+#### Manual Private Build
+
+1. Open Command Palette (`Ctrl+Shift+P`)
+2. Select: `LaTeX Workshop: Build LaTeX project`
+3. Choose: **Private PDF (full)**
+4. Output: `private.pdf` (full personal data)
+
+---
+
+# Safety Features
+
+1. **Default-safe**: Auto-builds generate only redacted output
+2. **Build-time validation**: `personal.tex` triggers an error if included in a public build
+3. **Git protection**: `.gitignore` prevents accidental commits of sensitive files
+4. **Explicit private builds**: Manual selection ensures private data is never auto-published
+
+---
+
+# Troubleshooting
+
+### "File personal.tex not found"
+
+- **Cause**: Personal data file missing
+- **Fix**: Copy template and edit
+
+```bash
+cp personal.example.tex personal.tex
+```
+
+### Private build still shows redacted data
+
+- **Cause**: `\PRIVATEBUILD` flag not recognised
+- **Fix**:
+
+  - Confirm `main-private.tex` contains `\def\PRIVATEBUILD{}`
+  - Use the "Private PDF (full)" recipe
+  - Ensure conditional logic in `main.tex` is before `\documentclass`
+
+### "ERROR: personal.tex included in PUBLIC build"
+
+- **Cause**: Safety check triggered
+- **Action**: Review build configuration to ensure public builds use `public.tex`
+
+---
+
+# Contributing
+
+1. **Do not commit** `personal.tex` or `private.pdf`
+2. **Do commit** `personal.example.tex`
+3. Test both builds before submitting PRs
+4. Update the example template if new personal fields are added
