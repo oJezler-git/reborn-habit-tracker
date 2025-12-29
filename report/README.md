@@ -25,14 +25,24 @@ If you want to modify the report or explore its structure:
 - [MiKTeX](https://miktex.org/) or TeX Live distribution
 - [Strawberry Perl](https://strawberryperl.com/) (for Windows users)
 
+## Installation & Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/oJezler-git/reborn-habit-tracker](https://github.com/oJezler-git/reborn-habit-tracker)
+   ```
+   ```bash
+   cd reborn-habit-tracker
+   ```
+
 Once installed, editing `main.tex` and saving it will trigger the build process.
 
 ## Project Structure
 
 ```
-
 reborn-habit-tracker/
 ├── report/
+│   ├── images/               # Images used in the report
 │   ├── main.tex              # Main document (edit this)
 │   ├── main-private.tex      # Private build wrapper (do not edit)
 │   ├── public.tex            # Redacted placeholder data
@@ -42,8 +52,6 @@ reborn-habit-tracker/
 ├── .gitignore                # Excludes personal.tex and private.pdf
 └── .vscode/
     └── settings.json         # LaTeX Workshop configuration
-
-
 ```
 
 ---
