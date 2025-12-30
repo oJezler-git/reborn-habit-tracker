@@ -28,12 +28,11 @@ If you want to modify the report or explore its structure:
 ## Installation & Setup
 
 1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/oJezler-git/reborn-habit-tracker](https://github.com/oJezler-git/reborn-habit-tracker)
-   ```
-   ```bash
-   cd reborn-habit-tracker
-   ```
+
+```bash
+git clone https://github.com/oJezler-git/reborn-habit-tracker.git
+cd reborn-habit-tracker/report
+```
 
 Once installed, editing `main.tex` and saving it will trigger the build process.
 
