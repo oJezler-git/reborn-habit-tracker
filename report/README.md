@@ -119,54 +119,89 @@ private.pdf
 
 ```json
 {
+  // -----------------------
+  // Tools (individual commands)
+  // -----------------------
   "latex-workshop.latex.tools": [
     {
+      // pdflatex command for public (redacted) build
       "name": "pdflatex-public",
       "command": "pdflatex",
       "args": [
-        "-synctex=1",
-        "-interaction=nonstopmode",
-        "-file-line-error",
-        "-jobname=public",
-        "%DOC%"
+        "-synctex=1", // enable SyncTeX for forward/inverse search
+        "-interaction=nonstopmode", // keep compiling even if errors occur
+        "-file-line-error", // show errors with file:line
+        "-jobname=public", // output PDF will be public.pdf
+        "%DOC%" // input file (main.tex)
       ]
     },
     {
+      // biber command for public build
+      "name": "biber-public",
+      "command": "biber",
+      "args": [
+        "public" // must match the -jobname above
+      ]
+    },
+    {
+      // pdflatex command for private (full) build
       "name": "pdflatex-private",
       "command": "pdflatex",
       "args": [
         "-synctex=1",
         "-interaction=nonstopmode",
         "-file-line-error",
-        "-jobname=private",
-        "main-private.tex"
+        "main-private.tex" // entry point for private build
+      ]
+    },
+    {
+      // biber command for private build
+      "name": "biber-private",
+      "command": "biber",
+      "args": [
+        "main-private" // matches the private entry point
       ]
     }
   ],
+
+  // -----------------------
+  // Recipes (sequence of tools)
+  // -----------------------
   "latex-workshop.latex.recipes": [
     {
+      // Public PDF recipe (redacted)
       "name": "Public PDF (redacted)",
-      "tools": ["pdflatex-public"]
+      "tools": [
+        "pdflatex-public",
+        "biber-public",
+        "pdflatex-public",
+        "pdflatex-public"
+      ]
     },
     {
+      // Private PDF recipe (full personal info)
       "name": "Private PDF (full)",
-      "tools": ["pdflatex-private"]
+      "tools": [
+        "pdflatex-private",
+        "biber-private",
+        "pdflatex-private",
+        "pdflatex-private"
+      ]
     }
   ],
-  "latex-workshop.latex.autoBuild.run": "onSave",
-  "latex-workshop.latex.recipe.default": "first",
 
-  "latex-workshop.latex.outDir": "./",
-  "latex-workshop.view.pdf.viewer": "tab",
+  // -----------------------
+  // Auto-build and viewer settings
+  // -----------------------
+  "latex-workshop.latex.autoBuild.run": "onSave", // compile automatically when saving
+  "latex-workshop.latex.recipe.default": "first", // use the first recipe by default
+  "latex-workshop.latex.outDir": "./", // output directory for auxiliary files
+  "latex-workshop.view.pdf.viewer": "tab", // VS Code PDF viewer
 
-  // tells forward sync (Ctrl+Alt+J) which PDF to open
-  "latex-workshop.view.pdf.internal.synctex.keybinding": "ctrl+click",
-
-  // override the output PDF name for synctex forward search
-  "latex-workshop.latex.jobname": "public",
-
-  // make sure synctex uses the correct file
-  "latex-workshop.synctex.synctexjs.enabled": true
+  // -----------------------
+  // SyncTeX settings for forward/inverse search
+  // -----------------------
+  "latex-workshop.synctex.synctexjs.enabled": true // enable SyncTeX using JavaScript
 }
 ```
 
