@@ -123,13 +123,21 @@ private.pdf
     {
       "name": "pdflatex-public",
       "command": "pdflatex",
-      "args": ["-interaction=nonstopmode", "-jobname=public", "main.tex"]
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-jobname=public",
+        "%DOC%"
+      ]
     },
     {
       "name": "pdflatex-private",
       "command": "pdflatex",
       "args": [
+        "-synctex=1",
         "-interaction=nonstopmode",
+        "-file-line-error",
         "-jobname=private",
         "main-private.tex"
       ]
@@ -146,7 +154,19 @@ private.pdf
     }
   ],
   "latex-workshop.latex.autoBuild.run": "onSave",
-  "latex-workshop.latex.recipe.default": "first"
+  "latex-workshop.latex.recipe.default": "first",
+
+  "latex-workshop.latex.outDir": "./",
+  "latex-workshop.view.pdf.viewer": "tab",
+
+  // tells forward sync (Ctrl+Alt+J) which PDF to open
+  "latex-workshop.view.pdf.internal.synctex.keybinding": "ctrl+click",
+
+  // override the output PDF name for synctex forward search
+  "latex-workshop.latex.jobname": "public",
+
+  // make sure synctex uses the correct file
+  "latex-workshop.synctex.synctexjs.enabled": true
 }
 ```
 
@@ -175,10 +195,10 @@ Add the following at the top of `main.tex` (before `\documentclass`):
 \fi
 ```
 
-Also mark the main file as root by adding this to the very top of the document:
+Force output to public.pdf for auto-builds and forward/inverse sync by adding this line to the very top of the `main.tex` file:
 
 ```tex
-% !TEX root = main.tex
+% !TEX jobname = public
 ```
 
 Use the commands throughout the document:
