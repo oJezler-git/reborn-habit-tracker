@@ -119,88 +119,81 @@ private.pdf
 ```json
 {
   // -----------------------
+  // Behaviour settings
+  // -----------------------
+  "latex-workshop.latex.autoBuild.run": "onSave", // compile automatically when saving
+  "latex-workshop.latex.recipe.default": "first", // use the first recipe by default (public)
+  "latex-workshop.view.pdf.viewer": "tab", // VS Code internal PDF viewer
+  "latex-workshop.latex.outDir": "./", // output directory for auxiliary files
+
+  // -----------------------
   // Tools (individual commands)
   // -----------------------
-  "latex-workshop.latex.tools": [
-    {
-      // pdflatex command for public (redacted) build
-      "name": "pdflatex-public",
-      "command": "pdflatex",
-      "args": [
-        "-synctex=1", // enable SyncTeX for forward/inverse search
-        "-interaction=nonstopmode", // keep compiling even if errors occur
-        "-file-line-error", // show errors with file:line
-        "-jobname=public", // output PDF will be public.pdf
-        "%DOC%" // input file (main.tex)
-      ]
-    },
-    {
-      // biber command for public build
-      "name": "biber-public",
-      "command": "biber",
-      "args": [
-        "public" // must match the -jobname above
-      ]
-    },
-    {
-      // pdflatex command for private (full) build
-      "name": "pdflatex-private",
-      "command": "pdflatex",
-      "args": [
-        "-synctex=1",
-        "-interaction=nonstopmode",
-        "-file-line-error",
-        "main-private.tex" // entry point for private build
-      ]
-    },
-    {
-      // biber command for private build
-      "name": "biber-private",
-      "command": "biber",
-      "args": [
-        "main-private" // matches the private entry point
-      ]
-    }
-  ],
+  {
+    // pdflatex command for public (redacted) build
+    "name": "pdflatex",
+    "command": "pdflatex",
+    "args": [
+      "-synctex=1", // enable SyncTeX for forward/inverse search
+      "-interaction=nonstopmode", // keep compiling even if errors occur
+      "-file-line-error", // show errors with file:line
+      "%DOC%" // input file (main.tex)
+    ]
+  },
+  {
+    // pdflatex command for private (full) build
+    "name": "pdflatex-private",
+    "command": "pdflatex",
+    "args": [
+      "-synctex=1", // enable SyncTeX
+      "-interaction=nonstopmode",
+      "-file-line-error",
+      "-PRIVATEBUILD", // define macro to switch to private content
+      "%DOC%" // input file
+    ]
+  },
+  {
+    // copy tool for public PDF after build
+    "name": "copy-public",
+    "command": "cmd",
+    "args": [
+      "/c", // Windows copy command
+      "copy",
+      "main.pdf", // source PDF
+      "public.pdf" // target PDF
+    ]
+  },
+  {
+    // copy tool for private PDF after build
+    "name": "copy-private",
+    "command": "cmd",
+    "args": [
+      "/c",
+      "copy",
+      "main.pdf", // source PDF
+      "private.pdf" // target PDF
+    ]
+  },
 
   // -----------------------
   // Recipes (sequence of tools)
   // -----------------------
-  "latex-workshop.latex.recipes": [
-    {
-      // Public PDF recipe (redacted)
-      "name": "Public PDF (redacted)",
-      "tools": [
-        "pdflatex-public",
-        "biber-public",
-        "pdflatex-public",
-        "pdflatex-public"
-      ]
-    },
-    {
-      // Private PDF recipe (full personal info)
-      "name": "Private PDF (full)",
-      "tools": [
-        "pdflatex-private",
-        "biber-private",
-        "pdflatex-private",
-        "pdflatex-private"
-      ]
-    }
-  ],
-
-  // -----------------------
-  // Auto-build and viewer settings
-  // -----------------------
-  "latex-workshop.latex.autoBuild.run": "onSave", // compile automatically when saving
-  "latex-workshop.latex.recipe.default": "first", // use the first recipe by default
-  "latex-workshop.latex.outDir": "./", // output directory for auxiliary files
-  "latex-workshop.view.pdf.viewer": "tab", // VS Code PDF viewer
-
-  // -----------------------
-  // SyncTeX settings for forward/inverse search
-  // -----------------------
-  "latex-workshop.synctex.synctexjs.enabled": true // enable SyncTeX using JavaScript
+  {
+    // Recipe for auto-building public PDF on save
+    "name": "Public PDF (auto)",
+    "tools": [
+      "pdflatex", // compile main.tex
+      "copy-public" // copy output to public.pdf
+    ]
+  },
+  {
+    // Recipe for manual building of private PDF
+    "name": "Private PDF (manual)",
+    "tools": [
+      "pdflatex-private", // compile main.tex with PRIVATEBUILD macro
+      "copy-private" // copy output to private.pdf
+    ]
+  }
 }
 ```
 
@@ -216,23 +209,16 @@ Add the following at the top of `main.tex` (before `\documentclass`):
 % Default to public for safety
 \publictrue
 
-% Override via private build
+% Allow override via command line flag
 \ifdefined\PRIVATEBUILD
   \publicfalse
 \fi
 
 \ifpublic
-  \def\public{}
-  \input{public.tex}   % Redacted data
+  \input{public.tex}   % redacted
 \else
-  \input{personal.tex} % Full personal data
+  \input{personal.tex} % only for manual builds
 \fi
-```
-
-Force output to public.pdf for auto-builds and forward/inverse sync by adding this line to the very top of the `main.tex` file:
-
-```tex
-% !TEX jobname = public
 ```
 
 Use the commands throughout the document:
