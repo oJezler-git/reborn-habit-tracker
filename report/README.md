@@ -121,77 +121,84 @@ private.pdf
   // -----------------------
   // Behaviour settings
   // -----------------------
-  "latex-workshop.latex.autoBuild.run": "onSave", // compile automatically when saving
-  "latex-workshop.latex.recipe.default": "first", // use the first recipe by default (public)
-  "latex-workshop.view.pdf.viewer": "tab", // VS Code internal PDF viewer
-  "latex-workshop.latex.outDir": "./", // output directory for auxiliary files
+  "latex-workshop.latex.autoBuild.run": "onSave",        // compile automatically when saving
+  "latex-workshop.latex.recipe.default": "first",        // use the first recipe by default
+  "latex-workshop.view.pdf.viewer": "tab",               // VS Code internal PDF viewer
+  "latex-workshop.latex.outDir": "./",                   // output directory for auxiliary files
 
   // -----------------------
   // Tools (individual commands)
   // -----------------------
-  {
-    // pdflatex command for public (redacted) build
-    "name": "pdflatex",
-    "command": "pdflatex",
-    "args": [
-      "-synctex=1", // enable SyncTeX for forward/inverse search
-      "-interaction=nonstopmode", // keep compiling even if errors occur
-      "-file-line-error", // show errors with file:line
-      "%DOC%" // input file (main.tex)
-    ]
-  },
-  {
-    // pdflatex command for private (full) build
-    "name": "pdflatex-private",
-    "command": "pdflatex",
-    "args": [
-      "-synctex=1", // enable SyncTeX
-      "-interaction=nonstopmode",
-      "-file-line-error",
-      "-PRIVATEBUILD", // define macro to switch to private content
-      "%DOC%" // input file
-    ]
-  },
-  {
-    // copy tool for public PDF after build
-    "name": "copy-public",
-    "command": "cmd",
-    "args": [
-      "/c", // Windows copy command
-      "copy",
-      "main.pdf", // source PDF
-      "public.pdf" // target PDF
-    ]
-  },
-  {
-    // copy tool for private PDF after build
-    "name": "copy-private",
-    "command": "cmd",
-    "args": [
-      "/c",
-      "copy",
-      "main.pdf", // source PDF
-      "private.pdf" // target PDF
-    ]
-  },
+  "latex-workshop.latex.tools": [
+    {
+      // pdflatex command for public (redacted) build
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-synctex=1",                     // enable SyncTeX for forward/inverse search
+        "-interaction=nonstopmode",       // keep compiling even if errors occur
+        "-file-line-error",               // show errors with file:line
+        "%DOC%"                           // input file (main.tex)
+      ]
+    },
+    {
+      // pdflatex command for private (full) build
+      // uses inline TeX to define PRIVATEBUILD before inputting the document
+      "name": "pdflatex-private",
+      "command": "pdflatex",
+      "args": [
+        "-synctex=1",                     // enable SyncTeX
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-jobname=main",                  // force output name to remain main.pdf
+        "\\def\\PRIVATEBUILD{}\\input{%DOC%}" // define macro and compile document
+      ]
+    },
+    {
+      // copy tool for public PDF after build
+      "name": "copy-public",
+      "command": "cmd",
+      "args": [
+        "/c",                             // Windows command shell
+        "copy",
+        "main.pdf",                       // source PDF
+        "public.pdf"                     // target PDF
+      ]
+    },
+    {
+      // copy tool for private PDF after build
+      "name": "copy-private",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "copy",
+        "main.pdf",                       // source PDF
+        "private.pdf"                    // target PDF
+      ]
+    }
+  ],
 
   // -----------------------
   // Recipes (sequence of tools)
   // -----------------------
   {
     // Recipe for auto-building public PDF on save
+    // runs pdflatex twice to stabilise references
     "name": "Public PDF (auto)",
     "tools": [
-      "pdflatex", // compile main.tex
-      "copy-public" // copy output to public.pdf
+      "pdflatex",                        // first LaTeX pass
+      "pdflatex",                        // second LaTeX pass
+      "copy-public"                     // copy output to public.pdf
     ]
   },
   {
     // Recipe for manual building of private PDF
+    // runs private build twice to stabilise references
     "name": "Private PDF (manual)",
     "tools": [
-      "pdflatex-private", // compile main.tex with PRIVATEBUILD macro
-      "copy-private" // copy output to private.pdf
+      "pdflatex-private",                // first private LaTeX pass
+      "pdflatex-private",                // second private LaTeX pass
+      "copy-private"                    // copy output to private.pdf
     ]
   }
 }
