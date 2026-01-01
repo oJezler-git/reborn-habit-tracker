@@ -1,0 +1,560 @@
+% ACTUAL CONTENT BEGINS ON LINE 500
+
+
+\documentclass[12pt,a4paper]{article}
+
+\newif\ifpublic
+
+% Default to public for safety
+\publictrue
+
+% Allow override via command line flag
+\ifdefined\PRIVATEBUILD
+  \publicfalse
+\fi
+
+\ifpublic
+  \input{public.tex}   % redacted
+\else
+  \input{personal.tex} % only for manual builds
+\fi
+
+% =============================
+% PACKAGES
+% =============================
+
+% Allow UTF-8 encoded characters (e.g., accents, symbols)
+\usepackage[utf8]{inputenc}
+
+% T1 font encoding, improving hyphenation and font output
+\usepackage[T1]{fontenc}
+
+% page layout control (margins, paper size, etc.)
+\usepackage{geometry}
+
+% mathematical typesetting
+\usepackage{amsmath}
+
+% mathematical symbols (blackboard bold, etc.)
+\usepackage{amssymb}
+
+% page margins to 2.5 cm
+\geometry{margin=2.5cm}
+
+% Set headheight to accommodate fancyhdr
+\setlength{\headheight}{13.6pt}
+
+% Provides commands to control line spacing
+\usepackage{setspace}
+
+% Sets line spacing to 1.5 lines
+\onehalfspacing
+
+% Wrap text around figures
+\usepackage{wrapfig}
+
+% Font Awesome 5 for icons
+\usepackage{fontawesome5}
+
+
+% -----------------------------
+% Graphics
+% -----------------------------
+
+% Loads graphicx in draft mode:
+% - Images are replaced by empty boxes
+% - Speeds up compilation during drafting
+% Comment this out for final submission to show images
+\usepackage[draft]{graphicx}
+% \usepackage{graphicx}  % Uncomment this for final version with images
+
+% Improves control over figure and table placement
+\usepackage{float}
+
+% professional table formatting
+% (e.g., \toprule, \midrule, \bottomrule)
+\usepackage{booktabs}
+\usepackage{multirow}
+
+
+% customisable numbering for lists
+\usepackage{enumitem}
+
+% clickable links for references, citations, URLs, and TOC
+\usepackage{hyperref}
+
+% smart quotation marks and language-aware quoting
+\usepackage{csquotes}
+
+% -----------------------------
+% Bibliography
+% -----------------------------
+
+% Loads biblatex with:
+% - biber as the backend
+% - IEEE citation style
+% - Maximum of 3 author names before "et al."
+% - Back-references from bibliography to citations
+\usepackage[
+  backend=biber,
+  style=ieee,
+  maxbibnames=3,
+  backref=true
+]{biblatex}
+
+% customisation of section titles
+\usepackage{titlesec}
+
+% bibliography db file location
+\addbibresource{references.bib}
+
+% smaller bibliography reference numbers
+\DeclareFieldFormat{labelnumber}{\scriptsize#1}
+
+
+
+% -----------------------------
+% Styling and Layout Enhancements
+% -----------------------------
+
+% epigraphs (quotes at the start of chapters/sections)
+\usepackage{epigraph}
+
+% colours throughout the document
+\usepackage{xcolor}
+% Brand Color Definitions
+\definecolor{brandBG}{HTML}{1A1A1A}
+\definecolor{brandSurface}{HTML}{2D2D2D}
+\definecolor{brandBorder}{HTML}{404040}
+\definecolor{brandPrimary}{HTML}{6366F1}
+\definecolor{brandSuccess}{HTML}{10B981}
+\definecolor{brandWarning}{HTML}{F59E0B}
+\definecolor{brandDanger}{HTML}{EF4444}
+\definecolor{brandInfo}{HTML}{3B82F6}
+\definecolor{brandTextPrimary}{HTML}{F3F4F6}
+\definecolor{brandTextSecondary}{HTML}{9CA3AF}
+\definecolor{brandTextDisabled}{HTML}{6B7280}
+
+% Helper for color swatches
+\newcommand{\swatch}[1]{\textcolor{#1}{\rule{1em}{1em}}}
+
+
+% source code formatting and syntax highlighting
+\usepackage{listings}
+
+% vector graphics and diagrams
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, shapes.multipart, calc, bending}
+
+% Proper Crow's Foot arrows declaration
+\makeatletter
+\pgfarrowsdeclare{crowsfoot}{crowsfoot}{
+  \pgfarrowsleftextend{-.5\pgflinewidth}
+  \pgfarrowsrightextend{-.5\pgflinewidth}
+}{
+  \pgfutil@tempdima=0.6pt
+  \advance\pgfutil@tempdima by.4\pgflinewidth
+  \pgfsetdash{}{+0pt}
+  \pgfsetmiterjoin
+  \pgfpathmoveto{\pgfqpoint{0pt}{-9\pgfutil@tempdima}}
+  \pgfpathlineto{\pgfqpoint{-13\pgfutil@tempdima}{0pt}}
+  \pgfpathlineto{\pgfqpoint{0pt}{9\pgfutil@tempdima}}
+  \pgfpathmoveto{\pgfqpoint{-12pt}{-6pt}}
+  \pgfpathlineto{\pgfqpoint{-12pt}{6pt}}
+  \pgfusepathqstroke
+}
+
+\pgfarrowsdeclare{omany}{omany}{
+  \pgfarrowsleftextend{-.5\pgflinewidth}
+  \pgfarrowsrightextend{-.5\pgflinewidth}
+}{
+  \pgfutil@tempdima=0.6pt
+  \advance\pgfutil@tempdima by.4\pgflinewidth
+  \pgfsetdash{}{+0pt}
+  \pgfsetmiterjoin
+  \pgfpathmoveto{\pgfqpoint{0pt}{-9\pgfutil@tempdima}}
+  \pgfpathlineto{\pgfqpoint{-13\pgfutil@tempdima}{0pt}}
+  \pgfpathlineto{\pgfqpoint{0pt}{9\pgfutil@tempdima}}
+  \pgfpathcircle{\pgfqpoint{-11.5pt}{0pt}}{3.5pt}
+  \pgfusepathqstroke
+}
+
+\pgfarrowsdeclare{one}{one}{
+  \pgfarrowsleftextend{-.5\pgflinewidth}
+  \pgfarrowsrightextend{-.5\pgflinewidth}
+}{
+  \pgfutil@tempdima=0.6pt
+  \advance\pgfutil@tempdima by.4\pgflinewidth
+  \pgfsetdash{}{+0pt}
+  \pgfsetmiterjoin
+  \pgfpathmoveto{\pgfqpoint{-6pt}{-6pt}}
+  \pgfpathlineto{\pgfqpoint{-6pt}{6pt}}
+  \pgfusepathqstroke
+}
+
+\pgfarrowsdeclare{oone}{oone}{
+  \pgfarrowsleftextend{-.5\pgflinewidth}
+  \pgfarrowsrightextend{-.5\pgflinewidth}
+}{
+  \pgfutil@tempdima=0.6pt
+  \advance\pgfutil@tempdima by.4\pgflinewidth
+  \pgfsetdash{}{+0pt}
+  \pgfsetroundjoin
+  \pgfpathcircle{\pgfqpoint{0pt}{0pt}}{4\pgfutil@tempdima}
+  \pgfusepathqstroke
+}
+\makeatother
+
+
+% custom headers and footers
+\usepackage{fancyhdr}
+
+
+% -----------------------------
+% Graphs and Charts
+% -----------------------------
+
+% plotting graphs (line charts, bar charts, etc.)
+\usepackage{pgfplots}
+
+% pgfplots v1.18 compatibility
+\pgfplotsset{compat=1.18}
+
+% pie charts
+\usepackage{pgf-pie}
+
+
+
+% =============================
+% FORMATTING
+% =============================
+
+% customise headers and footers
+% this is for the [School (Centre Number)] and [Candidate (Candidate Number)]
+\pagestyle{fancy}
+
+% clear all default header and footer fields
+\fancyhf{}
+
+
+
+% -----------------------------
+% Header Content
+% -----------------------------
+
+% Left header:
+% Displays the school name and centre number in small text
+\lhead{\small \SchoolName (Centre Number: \CentreNumber)}
+
+% Right header:
+% Displays the candidate name and number in small text
+% JEZLER - CHANGE THIS TO REAL NUMBER WHEN GIVEN
+\rhead{\small \StudentName (Candidate Number: \CandidateNumber)}
+
+
+
+% -----------------------------
+% Footer Content
+% -----------------------------
+
+% Centre footer:
+% Displays the current page number
+\cfoot{\thepage}
+
+
+
+% -----------------------------
+% Header and Footer Lines
+% -----------------------------
+
+% thickness of the line under the header
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Remove line above the footer
+\renewcommand{\footrulewidth}{0pt}
+
+% 1.5 line spacing throughout the document
+\onehalfspacing
+
+
+
+% -----------------------------
+% PDF Metadata and Hyperlinks
+% -----------------------------
+
+% PDF properties and hyperlink appearance
+\hypersetup{
+    colorlinks=true,          % Enables coloured links instead of boxed links
+    linkcolor=black,          % Colour of internal links (e.g. TOC)
+    urlcolor=blue,            % Colour of URL links
+    citecolor=blue,           % Colour of citation links
+    pdflang=en-GB,            % Document language (British English)
+    pdftitle={Computer Science NEA - REBORN}, % Title shown in PDF metadata
+    pdfauthor={\StudentName [\CandidateNumber]}, % Author metadata
+    pdfsubject={A-Level Computer Science Non-Exam Assessment}, % Subject metadata
+    pdfkeywords={Computer Science, NEA, A-Level, Algorithms, Programming, Evaluation, Habit Tracker, Productivity, Self-improvement, AI}, % Search keywords
+    plainpages=false         % Fixes issue with duplicate page numbers (e.g. i vs 1)
+}
+
+
+
+% -----------------------------
+% Section Title Formatting
+% -----------------------------
+
+% Formats \section headings:
+% - Normal font
+% - Large size
+% - Bold text
+\titleformat{\section}
+  {\normalfont\Large\bfseries} % Text style
+  {\thesection}                % Section number
+  {1em}                        % Space between number and title
+  {}                           % Code before the title text
+
+
+% Formats \subsection headings:
+% - Slightly smaller than \section
+% - Bold text
+\titleformat{\subsection}
+  {\normalfont\large\bfseries}
+  {\thesubsection}
+  {1em}
+  {}
+
+
+
+
+% -----------------------------
+% Section Numbering Depth
+% -----------------------------
+
+% numbering down to paragraph level (1.1.1.1)
+\setcounter{secnumdepth}{4}
+
+% paragraph-level headings in the table of contents
+\setcounter{tocdepth}{4}
+
+
+
+
+% -----------------------------
+% Paragraph as Subsubsubsection
+% -----------------------------
+
+% Redefines \paragraph to behave like a subsubsubsection
+% Used for product analysis headings (e.g. Notion, Habitica, etc.)
+\titleformat{\paragraph}
+  {\normalfont\normalsize\bfseries}   % Normal size, bold
+  {\thesubsubsection.\arabic{paragraph}} % Numbering like 1.1.1.1
+  {1em}                              % Space between number and title
+  {}
+
+% Controls spacing around paragraph headings
+\titlespacing*{\paragraph}
+  {0pt}                              % Left indentation
+  {3.25ex plus 1ex minus .2ex}       % Space before
+  {1.5ex}                            % Space after
+
+
+
+
+% -----------------------------
+% Epigraph Formatting
+% -----------------------------
+
+% width of epigraph text
+\setlength{\epigraphwidth}{0.4\textwidth}
+
+% thickness of the rule beneath epigraphs
+\setlength{\epigraphrule}{0.5pt}
+
+% epigraph text to the right
+\renewcommand{\textflush}{flushright}
+
+% epigraph source to the right
+\renewcommand{\sourceflush}{flushright}
+
+
+
+% -----------------------------
+% Tally Marks (TikZ)
+% -----------------------------
+
+% tally of five:
+% Four vertical lines with a diagonal slash through them
+\newcommand{\tallyfive}{%
+  \begin{tikzpicture}[baseline=-3pt, scale=0.3]
+    \draw[thick] (0,0) -- (0,1);
+    \draw[thick] (0.3,0) -- (0.3,1);
+    \draw[thick] (0.6,0) -- (0.6,1);
+    \draw[thick] (0.9,0) -- (0.9,1);
+    \draw[thick] (-0.2,0.2) -- (1.1,0.8);
+  \end{tikzpicture}\hspace{2mm}%
+}
+
+% single tally line
+% Can be repeated for 1–4 tallies
+\newcommand{\tallyone}{%
+  \begin{tikzpicture}[baseline=-3pt, scale=0.3]
+    \draw[thick] (0,0) -- (0,1);
+  \end{tikzpicture}\hspace{1mm}%
+}
+
+
+
+% =============================
+% CODE FORMATTING
+% =============================
+
+% Global configuration for the listings package
+\lstset{
+    basicstyle=\ttfamily\small,   % Monospaced font, small size
+    backgroundcolor=\color{gray!10}, % Light grey background
+    frame=single,                 % Draws a border around code blocks
+    breaklines=true,              % Automatically wraps long lines
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}, % Symbol indicating line break
+    keywordstyle=\color{blue},    % Colour for language keywords
+    commentstyle=\color{gray},    % Colour for comments
+}
+
+% Define a premium pseudocode style
+\lstdefinestyle{pseudocode}{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue!80!black}\bfseries,
+    commentstyle=\color{green!50!black}\itshape,
+    stringstyle=\color{red!80!black},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=10pt,
+    backgroundcolor=\color{gray!5},
+    frame=single,
+    rulecolor=\color{black!20},
+    tabsize=4,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=true,
+    showspaces=false,
+    showtabs=false,
+    xleftmargin=2.5em,
+    framexleftmargin=1.5em,
+    morekeywords={FUNCTION, IF, THEN, ELSE, RETURN, FOR, EACH, IN, DO, END, DELETE, TRUE, FALSE, LENGTH},
+    morecomment=[l]{//},
+    literate={<-}{{$\leftarrow$}}1 {<=}{{$\leq$}}1 {>=}{{$\geq$}}1,
+}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Define AQA-style alias commands if strictly needed, 
+% but standard algorithmicx usually suffices.
+\renewcommand{\algorithmicrequire}{\textbf{INPUT:}}
+\renewcommand{\algorithmicensure}{\textbf{OUTPUT:}}
+
+
+% =============================
+% DOCUMENT
+% =============================
+\begin{document}
+% ---------- TITLE PAGE ----------
+ \hypersetup{pageanchor=false}
+ \begin{titlepage}
+    \centering
+    \vspace*{3cm}
+    {\Huge \textbf{Computer Science NEA}}\\[0.5cm]
+    {\Large REBORN --- An adaptive Habit Tracker}\\[1cm]
+
+    {\Large \StudentName}\\[0.3cm]
+    {\large Candidate Number: \textbf{\CandidateNumber} \quad | \quad Centre Number: \textbf{\CentreNumber}}\\[0.3cm]
+    {\large Centre Name: \textbf{\SchoolName}}\\[0.3cm]
+    {\large Qualification Code: 7517}\\[0.3cm]
+    {\large \today}\\[3cm]
+
+    \rule{0.9\textwidth}{0.4pt}\\[0.3cm]
+    \begin{minipage}{0.8\textwidth}
+    \centering
+    \emph{“Civilization advances by extending the number of operations we can perform without thinking about them.” --- A. North Whitehead}
+    \end{minipage}\\[0.3cm]
+    \rule{0.9\textwidth}{0.4pt}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+
+\pagenumbering{roman}
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+\pagenumbering{arabic}
+
+
+% ================================================================================
+% ------------------------------- Introduction -----------------------------------
+% ================================================================================
+\section{Introduction}
+
+\epigraph{\enquote{Make it so easy you can't say no.}}{\textit{James Clear, Atomic Habits} \cite{clear2018atomic}}
+
+In recent years, human attention has turned into a commodified resource. Algorithms running platforms such as TikTok and Instagram are built to maximise engagement through \emph{variable reward schedules}\cite{variable-reward-schedules}, at the cost of user agency. As a student taking four A-Levels, I face a constant mental load just to plan and maintain positive habits. Nearly all existing habit tracking tools only allow for static tracking or depend on manual organisation and do not support predictive/adaptive behaviour management.
+
+This project, \textbf{REBORN}, aims to build an intelligent habit-tracking system that automates scheduling, analyses behavioural risk, and dynamically adapts difficulty. When software handles the heavy planning and adaptation, users can focus their energy on execution.
+
+% ---------- 2. ANALYSIS ----------
+% Analysis (7-9 marks)
+% "Fully scoped analysis of a real problem, presented in a way that a third party can understand. Requirements fully documented in a set of measurable and appropriate specific objectives, covering all required functionality of the solution or areas of investigation. Requirements arrived at by considering, through dialogue, the needs of the intended users of the system, or recipients of the outcomes for investigative projects. Problem sufficiently well modelled to be of use in subsequent stages."
+
+\clearpage
+% ===================================================================================
+\section{Analysis}
+% ===================================================================================
+
+\subsection{Problem Definition}
+
+% Describing how manual habit tracking is exhausting and current technology is not intelligent enough to reduce this problem.
+Many people experience \emph{self-regulation failure} - they want to improve, but the cognitive effort needed to plan and continuously maintain habits often leads to burnout. Technology is not only the largest source of procrastination, but also doesn't provide intelligent ways to reduce this problem. Habit formation, therefore, is both a computational challenge and a psychological one. Tools that can automate planning, predict high-risk periods, and adapt interventions in real time are therefore necessary.
+
+
+\subsection{Users}
+% Describing the primary users of the system and their needs.
+% This includes: 
+%  A level students
+%  Professionals
+%  Fitness enthusiasts
+%  General users who want to improve their habits
+The primary users of REBORN are students, especially those studying multiple A-Levels and struggling with procrastination and the mental load of planning habits. For this group, automation and predictive intervention allow them to focus on doing the habits instead of the organisation.  
+
+\vspace{0.5em}
+The system also addresses a larger audience, such as:
+\begin{itemize}
+    \item Professionals who need structured routines and work-life balance.
+    \item People maintaining a regular fitness routine.
+    \item Individuals interested in self-improvement and habit formation.
+\end{itemize}
+
+All of these users encounter self-regulation failure, where manual habit tracking often results in cognitive overload and burnout. By moving planning and predictive analysis to software, REBORN makes habit formation more accessible and responsive to individual circumstances.
+
+% ================================================================================
+% ------------------------------------- End --------------------------------------
+% ================================================================================
+\clearpage
+\thispagestyle{empty}
+\vspace*{\fill}
+
+\begin{center}
+\rule{0.6\textwidth}{0.4pt}\\[0.4cm]
+\textit{REBORN --- Computer Science NEA}\\[0.3cm]
+\rule{0.6\textwidth}{0.4pt}
+\end{center}
+
+\vspace*{\fill}
+
+
+% ================================================================================
+% ---------------------------------- References ----------------------------------
+% ================================================================================
+\clearpage
+\addcontentsline{toc}{section}{References}
+\printbibliography[title=References]
+
+\end{document}
