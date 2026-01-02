@@ -65,8 +65,8 @@
 % - Images are replaced by empty boxes
 % - Speeds up compilation during drafting
 % Comment this out for final submission to show images
-\usepackage[draft]{graphicx}
-% \usepackage{graphicx}  % Uncomment this for final version with images
+% \usepackage[draft]{graphicx}
+\usepackage{graphicx}  % Uncomment this for final version with images
 
 % Improves control over figure and table placement
 \usepackage{float}
@@ -145,6 +145,9 @@
 % vector graphics and diagrams
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric, shapes.multipart, calc, bending}
+
+% tree diagrams for hierarchical structures
+\usepackage{forest}
 
 % Proper Crow's Foot arrows declaration
 \makeatletter
@@ -453,6 +456,18 @@
 \renewcommand{\algorithmicensure}{\textbf{OUTPUT:}}
 
 
+\usepackage{minted}
+\setminted{
+  fontsize=\small,
+  frame=lines,
+  framesep=6pt,
+  linenos,
+  breaklines,
+  tabsize=2,
+  bgcolor=gray!5
+}
+
+
 % =============================
 % DOCUMENT
 % =============================
@@ -533,6 +548,234 @@ The system also addresses a larger audience, such as:
 \end{itemize}
 
 All of these users encounter self-regulation failure, where manual habit tracking often results in cognitive overload and burnout. By moving planning and predictive analysis to software, REBORN makes habit formation more accessible and responsive to individual circumstances.
+
+% ================================================================================
+% --------------------- Existing Solutions - Secondary Research ------------------
+% ================================================================================
+\newpage
+\subsection{Secondary Research}
+
+% The current state of habit tracking apps, and why we need REBORN.
+Current habit-tracking and productivity applications vary significantly in the amount of computation they perform. Some are manual-input database systems, others are game-like behavioural frameworks. A technical analysis shows that most apps use psychological principles (loss aversion/variable reward schedules) instead of algorithmic reasoning.
+
+To justify the development of REBORN, I will contrast existing tools with a theoretical \enquote{gold standard} of computational habit formation, and then find specific technical gaps in scheduling, prediction, and how systems adapt to user context over time.
+
+\subsubsection{PCS Framework}
+% Some theory on PCS (the strongest framework for habit formation).
+The strongest computational framework for habit formation is the \textbf{Predicting Context Sensitivity (PCS)} method \cite{buyalskaya2023what}. Unlike the \emph{21-day myth}, this machine-learning methodology models habit formation as a continuous measure of context-sensitive predictability.
+
+% Explain what LASSO is here (machine learning tool used in habit research)
+Using \textbf{LASSO} (Least Absolute Shrinkage and Selection Operator) regression---a regularised machine-learning method that identifies the most predictive contextual variables while reducing overfitting---on datasets with 40 million+ observations, Buyalskaya et al. showed that habit formation timelines are domain-specific. The estimated times range from a few weeks for simple hygiene tasks to 2--3 months for more complex behaviours like regularly going to the gym \cite{buyalskaya2023what}.
+
+% Why REBORN is needed
+Most importantly, no current app makes use of this kind of context data (e.g., time lags, or day-of-week streaks) to predict user behaviour.
+
+% ----------------------------------------------------
+% ---------- ANALYSIS OF EXISTING SOLUTIONS ----------
+% ----------------------------------------------------
+
+\subsubsection{Existing Systems}
+This section analyses the four most popular habit tracking and task management apps: Notion, Habitica, Streaks, and Todoist. While other applications exist, these four represent the distinct architectural archetypes currently dominating the market.
+
+% ---------------------------------------
+% 1. DESCRIPTIONS AND FUNCTIONALITY
+% ---------------------------------------
+\newpage
+\paragraph{Description and Functionality}
+
+\textbf{Notion} \\
+Notion is a workspace that acts like a relational database wrapper. The user defines schemas (tables) and views (Kanban, Calendar) manually. The backend uses a SQL-like structure which is then served to a React frontend.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth, trim=0 50 0 50, clip]{images/notion_secondary_research.png} 
+    \caption{A Notion Habit Tracker showing the manual checkbox system.}
+    \label{fig:notion}
+\end{figure}
+
+\noindent\textbf{Habitica} \\
+Habitica is a gamified task manager that uses operant conditioning. It wraps a CRUD system in RPG mechanics, where doing tasks gives \emph{Gold/XP} and missing them causes \emph{Health Loss}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/habitica_secondary_research.png} 
+    \caption{The Habitica dashboard showing the RPG avatar and health bars.}
+    \label{fig:habitica}
+\end{figure}
+
+\noindent\textbf{Streaks} \\
+Streaks is a minimalist habit tracker deeply integrated into the Apple ecosystem. Unlike database tools, it focuses entirely on the \emph{Don't Break the Chain} psychological method \cite{clear2018atomic}. Technically, it is notable for its API integration with Apple HealthKit \cite{apple2025healthkit}, allowing it to automatically mark habits (e.g., \enquote{Walk 5,000 steps}) as complete without user input.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/streaks_secondary_research.jpeg} 
+    \caption{The Streaks interface showing its main features.}
+    \label{fig:streaks}
+\end{figure}
+
+\noindent\textbf{Todoist} \\
+Todoist is a task management system primarily designed for one-off tasks. In earlier versions, Todoist experimented with automated rescheduling through its \textit{Smart Schedule} feature, which attempted to suggest new due dates for overdue tasks. Although discontinued natively because of accuracy issues \cite{todoist2020smartschedule}, similar behaviour is achievable through third-party integrations like Trevor AI, which apply heuristic time-blocking and NLP to parse tasks and insert them into available calendar gaps.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth, trim=0 100 0 150, clip]{images/todoist_secondary_research.jpg} 
+    \caption{Todoist's ``Smart Schedule'' interface suggesting times for tasks \cite{macstories2023todoist}.}
+    \label{fig:todoist}
+\end{figure}
+
+% ---------------------------------------
+% 2. ADVANTAGES AND DISADVANTAGES
+% ---------------------------------------
+\newpage
+\paragraph{Analysis of Advantages and Disadvantages}
+
+The following tables breakdown the strengths and weaknesses of each system's architecture and user experience model.
+
+\vspace{2em}
+\noindent\textbf{Notion}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+    \hline
+    \textbf{Advantages} & \textbf{Disadvantages} \\
+    \hline
+    Highly flexible data modeling allowing for complex relationship definitions. & \textbf{The \emph{Blank Slate} problem:} Users must build the system themselves; there is no built-in logic. \\
+    \hline
+    Visual customisation reduces initial friction for design-oriented users. & \textbf{No constraint satisfaction:} It cannot detect schedule conflicts or optimise time slots automatically \cite{russell2020ai}. \\
+    \hline
+    Excellent database management for historical record keeping. & Entirely manual input leads to high administrative load (cognitive friction). \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\noindent\textbf{Streaks}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+    \hline
+    \textbf{Advantages} & \textbf{Disadvantages} \\
+    \hline
+    \textbf{API Automation:} Integration with Apple HealthKit removes \emph{administrative friction} by tracking physical habits automatically. & \textbf{The \emph{All-or-Nothing} flaw:} It relies on strict binary logic. If a user misses one day, the streak resets to zero. This often causes the \emph{What-the-Hell Effect} \cite{polivy1975perceived}, where users abandon the app after a failure. \\
+    \hline
+    \textbf{Visual Feedback:} The circular UI provides immediate visual status of daily progress, leveraging \emph{loss aversion} effectively \cite{kahneman2011thinking}. & \textbf{No Scheduling Logic:} The app tracks \textit{completion}, but offers no assistance with \textit{allocation}. It cannot help the user find time in a busy schedule to actually perform the habit. \\
+    \hline
+    Minimalist design reduces cognitive load compared to complex tools like Notion. & Lack of adaptive difficulty; the target remains static regardless of user burnout. \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\newpage
+\noindent\textbf{Habitica}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+    \hline
+    \textbf{Advantages} & \textbf{Disadvantages} \\
+    \hline
+    Gamification (XP/Gold) uses dopamine loops \cite{eyal2014hooked} to increase initial engagement. & \textbf{Static Recurrence:} It relies on fixed rules (e.g., \enquote{Every Mon/Tue}) rather than adaptive scheduling. \\
+    \hline
+    Social accountability features (parties/guilds) help with external motivation. & \textbf{Reactive Punishment:} It creates a \emph{death spiral}. If a user is busy and misses tasks, the game punishes them, demotivating them further. \\
+    \hline
+    & No awareness of external schedules or calendar conflicts. \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\noindent\textbf{Todoist}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{0.45\linewidth}|p{0.45\linewidth}|}
+    \hline
+    \textbf{Advantages} & \textbf{Disadvantages} \\
+    \hline
+    NLP (Natural Language Processing) enables rapid task entry using natural language \cite{trevorai2025}. & \textbf{Task vs. Habit:} The system focuses on one-off tasks and lacks a risk or failure model suitable for long-term habit formation. \\
+    \hline
+    Heuristic time-blocking reduces the cognitive load of manual scheduling. & Scheduling behaviour is static; repeated failure does not reduce workload or adjust task frequency. \\
+    \hline
+    & Closed-source algorithms prevent inspection or tuning for individual habit difficulty curves. \\
+    \hline
+    \end{tabular}
+\end{table}
+
+
+% ---------------------------------------
+% 3. IMPLICATIONS
+% ---------------------------------------
+\paragraph{Implications for Proposed System}
+
+By investigating these systems, I have identified specific features to adopt and critical flaws to improve upon in the proposed solution.
+
+\textbf{From Notion:} \\
+While a relational database is important for storing habit history, relying on the user to manually schedule every event leads to burnout.
+\begin{itemize}
+    \item \textbf{I will include:} A strong relational database backend (PostgreSQL) similar to Notion's architecture to ensure data integrity.
+    \item \textbf{I will improve:} Instead of manual entry, I will implement a Constraint Satisfaction Scheduler to automate the data entry process, solving the \emph{Blank Slate} problem.
+\end{itemize}
+
+\textbf{From Habitica:} \\
+Feedback mechanisms are effective, but \enquote{punishment} (losing HP) is flawed if the user is busy or overwhelmed.
+\begin{itemize}
+    \item \textbf{I will include:} A feedback loop system, but instead of RPG stats, I will use a \textbf{Simulation} to visualise habit stability.
+    \item \textbf{I will improve:} The system will be predictive rather than reactive. By using \textbf{Logistic Regression}, my system will warn the user of risk \textit{before} they fail, rather than punishing them \textit{after}.
+\end{itemize}
+
+\textbf{From Streaks:} \\
+Visualising progress is vital, but the \emph{streak counter} model is too fragile for students with variable workloads.
+\begin{itemize}
+    \item \textbf{I will include:} A strong visual representation of habit health, similar to the \emph{rings} in Streaks, to provide immediate feedback.
+    \item \textbf{I will improve:} Instead of a binary \emph{streak} that breaks (0 or 1), I will use my \textbf{simulation}. This treats habit consistency as a continuous variable (Stability). If a user misses a day, the stability decays rather than resetting to zero, which is mathematically more forgiving and encourages recovery.
+\end{itemize}
+
+\textbf{From Todoist:} \\
+Algorithmic scheduling is desirable, but fixed heuristics fail when psychological factors and user failure are not modelled.
+\begin{itemize}
+    \item \textbf{I will include:} Automated time-blocking to ensure habits and tasks are placed within realistic daily constraints.
+    \item \textbf{I will improve:} The use of the \textbf{SM-2 algorithm} (Spaced Repetition) \cite{wozniak1990sm2} to dynamically reduce habit frequency when users struggle, preventing overload and burnout.
+    \item \textbf{I will avoid:} Rigid heuristic scheduling by integrating adaptive control and predictive modelling to maintain long-term adherence.
+\end{itemize}
+
+
+% ---------------------------------------
+% 4. TECHNICAL GAPS
+% ---------------------------------------
+\newpage
+\subsubsection{Identification of Technical Gaps}
+
+The comparison of existing tools shows three algorithmic gaps in the current market that \textbf{REBORN} aims to solve:
+
+\begin{enumerate}
+    \item \textbf{Constraint Satisfaction Solvers (CSP):} 
+    Current apps rely on manual time-picking. No system treats the daily schedule as a combinatorial search problem that can be solved via backtracking or constraint propagation to guarantee conflict-free allocation \cite{russell2020ai}.
+    
+    \item \textbf{Predictive Logistic Regression:} 
+    Applications are reactive; they show historical graphs instead of forecasting. None use the PCS framework's approach (Logistic Regression) to calculate a probability $P(fail)$ for the upcoming day to trigger preventative interventions.
+    
+    \item \textbf{Static Frequency vs. Adaptive Control:} 
+    Habit trackers use static schedules (e.g., ``Daily''). They do not implement control loops (like the SM-2 spaced repetition algorithm \cite{wozniak1990sm2}) to adjust frequency based on user performance, for example, by scaling back load to prevent burnout.
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{System} & \textbf{Scheduling Logic} & \textbf{Predictive Model} & \textbf{Adaptivity} & \textbf{Primary Domain} \\ \hline
+Notion & Manual (User defined) & None & None & Database \\ \hline
+Habitica & Fixed Recurrence & None & None & Gamification \\ \hline
+Streaks & Fixed Recurrence & None & None & Health Tracking \\ \hline
+Todoist + Trevor & Heuristic Time-blocking & Duration Estimation & None & Task Management \\ \hline
+\textbf{REBORN} & \textbf{Constraint Solver (DFS)} & \textbf{Logistic Regression} & \textbf{SM-2 Algorithm} & \textbf{Habit Optimisation} \\ \hline
+\end{tabular}%
+}
+\caption{Comparison of existing solutions against the proposed system.}
+\label{tab:comparison}
+\end{table}
+
+% ---------- CONCLUSION ----------
+\subsubsection{Conclusion}
+The existing market is saturated with tools that record data but can't compute solutions. Todoist already shows how algorithmic scheduling can help with one-off tasks and academic papers on the PCS framework \cite{buyalskaya2023what} led mathematically with prediction. No system integrates these into a single application. 
+
+This presents a clear opportunity to close the gap by moving from passive data recording to active, algorithmic planning, treating habit formation as a computational problem instead of just a psychological one.
+
+
+
+\newpage
 
 % ================================================================================
 % ------------------------------------- End --------------------------------------
