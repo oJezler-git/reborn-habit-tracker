@@ -1,0 +1,311 @@
+% HARVARD BIBTEX GUIDE
+% ==============================================================================
+% GENERAL RULES:
+% 1. Corporate Authors: Use double braces {{Name}} to stop "Name, The".
+% 2. Multiple Authors: Separate with "and" (e.g., Smith, J. and Doe, A.).
+% 3. Capitalisation: Wrap {C}apitals in curly braces if the style lowers them.
+% 4. "Accessed" Date: Use the 'note' field for maximum compatibility.
+
+% ==============================================================================
+% book: Standard Books
+% Required: author, title, publisher, year.
+% Optional: address (City), edition, isbn.
+% ------------------------------------------------------------------------------
+% book{key,
+%   author    = {Surname, Firstname},
+%   title     = {Title of the Book},
+%   publisher = {Publisher Name},
+%   address   = {City of Publication}, 
+%   year      = {2025},
+%   edition   = {2nd}
+% }
+% ==============================================================================
+
+% article: Journal Articles
+% Required: author, title, journal, year.
+% Optional: volume, number, pages, doi.
+% ------------------------------------------------------------------------------
+% article{key,
+%   author    = {Surname, F. and Other, N.},
+%   title     = {Title of the Article},
+%   journal   = {Journal Name},
+%   volume    = {12},
+%   number    = {4},
+%   pages     = {100--120},
+%   year      = {2025},
+%   doi       = {10.xxxx/xxxx}
+% }
+% ==============================================================================
+
+% ==============================================================================
+% online: Websites / Web Pages
+% Required: author, title, url, year (or {no date}).
+% Optional: note (for access date).
+% ------------------------------------------------------------------------------
+% online{key,
+%   author    = {{Corporate Name} or Surname, F.},
+%   title     = {Page Title},
+%   url       = {https://website.com},
+%   year      = {2025},
+%   note      = {Accessed: 15 December 2025}
+% }
+% ==============================================================================
+
+% ==============================================================================
+% incollection: Chapter in an Edited Book
+% Required: author, title, booktitle, publisher, year.
+% Optional: editor, pages, address.
+% ------------------------------------------------------------------------------
+% incollection{key,
+%   author    = {Chapter Author, F.},
+%   title     = {Title of Chapter},
+%   booktitle = {Title of the Edited Book},
+%   editor    = {Editor Name, F.},
+%   publisher = {Publisher},
+%   year      = {2025},
+%   pages     = {45--67}
+% }
+% ==============================================================================
+
+% ==============================================================================
+% techreport: Reports / White Papers
+% Required: author, title, institution, year.
+% ------------------------------------------------------------------------------
+% techreport{key,
+%   author    = {{Organization Name}},
+%   title     = {Title of Report},
+%   institution = {Institution Name},
+%   year      = {2025},
+%   number    = {Report No. 123}
+% }
+% ==============================================================================
+
+% ==============================================================================
+% phdthesis: Dissertations
+% Required: author, title, school, year.
+% ------------------------------------------------------------------------------
+% phdthesis{key,
+%   author    = {Surname, Firstname},
+%   title     = {Title of the Thesis},
+%   school    = {University Name},
+%   year      = {2025}
+% }
+% ==============================================================================
+
+
+% ==========================================
+% ACADEMIC BOOKS & TEXTBOOKS (High Quality)
+% ==========================================
+
+@book{clear2018atomic,
+  author       = {Clear, James},
+  title        = {Atomic Habits: An Easy \& Proven Way to Build Good Habits \& Break Bad Ones},
+  publisher    = {Avery, an imprint of Penguin Random House},
+  address      = {New York, NY, USA},
+  year         = {2018},
+  isbn         = {9780735211292},
+  pages        = {320},
+  language     = {English},
+  note         = {First published October 16, 2018; Hardcover edition; Bestseller on habit formation},
+}
+
+
+@book{russell2020ai,
+  author       = {Russell, Stuart and Norvig, Peter},
+  title        = {Artificial Intelligence: A Modern Approach},
+  edition      = {4},
+  publisher    = {Pearson},
+  address      = {Harlow, England / London, UK (Global Edition)},
+  year         = {2020},
+  isbn         = {9781292401133},
+  pages        = {Approx. 1,152 (varies by edition)},
+  language     = {English},
+  note         = {Global Edition, comprehensive textbook on AI covering search, CSPs, reasoning, planning, and machine learning},
+}
+
+@book{kahneman2011thinking,
+  author       = {Kahneman, Daniel},
+  title        = {Thinking, Fast and Slow},
+  publisher    = {Farrar, Straus and Giroux},
+  address      = {New York, NY, USA},
+  year         = {2011},
+  isbn         = {9780374275631},
+  pages        = {498},
+  language     = {English},
+  note         = {Explores dual-system theory of cognition and decision making},
+}
+
+
+@book{eyal2014hooked,
+  author       = {Eyal, Nir},
+  title        = {Hooked: How to Build Habit-Forming Products},
+  publisher    = {Portfolio (Penguin Random House)},
+  address      = {New York, NY, USA},
+  year         = {2014},
+  isbn         = {9781591847786},
+  pages        = {256},
+  language     = {English},
+  note         = {Guide to the Hook Model for designing engaging, habit-forming products},
+}
+
+
+% ==========================================
+% ACADEMIC PAPERS
+% ==========================================
+
+@article{buyalskaya2023what,
+  author    = {Buyalskaya, Anastasia and Ho, Hung and Milkman, Katherine L. and Li, Xiaomin and Duckworth, Angela L. and Camerer, Colin},
+  title     = {What Can Machine Learning Teach Us About Habit Formation? Evidence from Exercise and Hygiene},
+  journal   = {Proceedings of the National Academy of Sciences of the United States of America},
+  volume    = {120},
+  number    = {17},
+  pages     = {e2216115120},
+  year      = {2023},
+  publisher = {National Academy of Sciences},
+  doi       = {10.1073/pnas.2216115120},
+  url       = {https://www.pnas.org/doi/10.1073/pnas.2216115120},
+  urldate   = {2025-12-18},
+  abstract  = {Machine learning methods were used to identify context variables associated with behavior to characterize habit formation in gym attendance and hospital handwashing. Findings show habit formation takes months for exercise and weeks for handwashing, challenging the popular “magic number” idea.},
+  note      = {Published 17 April 2023; indexed in PNAS; evidence on habit formation curve using large panel datasets} 
+}
+
+
+@article{polivy1975perceived,
+  author    = {Polivy, Janet and Herman, C. Peter},
+  title     = {Anxiety, restraint, and eating behavior},
+  journal   = {Journal of Abnormal Psychology},
+  volume    = {84},
+  number    = {6},
+  pages     = {666--672},
+  year      = {1975},
+  doi       = {10.1037/0021-843X.84.6.666},
+  note      = {Early experimental demonstration of counter-regulatory overeating in restrained eaters, foundational to the later ``what-the-hell effect'' concept in this literature.}
+}
+
+
+@article{edwards2016systematic,
+  author    = {Edwards, E. A. and Lumsden, J. and Rivas, C. and Steed, L. and Edwards, L. A. and Thiyagarajan, A. and Sohanpal, R. and Caton, H. and Griffiths, C. J. and Munaf{\`o}, M. R. and Taylor, S. and Walton, R. T.},
+  title     = {Gamification for Health Promotion: Systematic Review of Behaviour Change Techniques in Smartphone Apps},
+  journal   = {BMJ Open},
+  volume    = {6},
+  number    = {10},
+  pages     = {e012447},
+  year      = {2016},
+  publisher = {BMJ Publishing Group},
+  doi       = {10.1136/bmjopen-2016-012447},
+  url       = {https://bmjopen.bmj.com/content/6/10/e012447},
+  urldate   = {2025-12-18},
+  abstract  = {A systematic review examined the use of behaviour change techniques in smartphone apps with gamification elements, finding wide variation in techniques and none directly linked to user outcomes.},
+  note      = {Open access; includes taxonomy analysis of behaviour change techniques (BCT) embedded in health-oriented apps}
+}
+
+
+
+% ==========================================
+% TECHNICAL DOCUMENTATION & ALGORITHMS
+% ==========================================
+
+@online{wozniak1990sm2,
+  title     = {Optimization of learning: The SM-2 Algorithm},
+  author    = {Wozniak, Piotr A.},
+  year      = {1990},
+  url       = {https://www.supermemo.com/en/archives1990-2015/english/ol/sm2},
+  urldate   = {2025-12-14},
+  note      = {Original description of the SM-2 spaced repetition algorithm}
+}
+
+@online{apple2025healthkit,
+  title     = {HealthKit Documentation},
+  author    = {{Apple Inc.}},
+  year      = {2025},
+  url       = {https://developer.apple.com/documentation/healthkit},
+  urldate   = {2025-12-15}
+}
+
+@online{trevorai2025,
+  author    = {{Trevor AI}},
+  title     = {Trevor AI: Plan your Tasks with Todoist},
+  url       = {https://www.trevorai.com/integrations/todoist},
+  year      = {2021},
+  urldate   = {2025-12-12},
+  note      = {Integration documentation for Trevor AI and Todoist task planning}
+}
+
+
+% ==========================================
+% PRODUCT WEBSITES & SECONDARY SOURCES
+% ==========================================
+
+@online{notion,
+  author    = {{Notion}},
+  title     = {Notion — The Connected Workspace},
+  year      = {2025},
+  url       = {https://www.notion.so},
+  urldate   = {2025-12-11}
+}
+
+@online{habitica,
+  author    = {{Habitica}},
+  title     = {Habitica — Gamify Your Life},
+  year      = {2025},
+  url       = {https://habitica.com},
+  urldate   = {2025-12-11}
+}
+
+@online{variable-reward-schedules,
+  author    = {{Cognitive Neuroeconomics}},
+  title     = {Why Social Media Is So Addictive — The Science Behind Dopamine and Reward},
+  url       = {https://medium.com/cognitive-neuroeconomics/why-social-media-is-so-addictive-the-science-behind-dopamine-and-reward-a276d123dc61},
+  year      = {2025},
+  urldate   = {2025-12-13}
+}
+
+@online{sparkco2025notion,
+  author    = {{Sparkco AI}},
+  title     = {Optimizing Notion Databases for Large Datasets in 2025},
+  url       = {https://sparkco.ai/blog/optimizing-notion-databases-for-large-datasets-in-2025},
+  year      = {2025},
+  urldate   = {2025-12-16}
+}
+
+@online{trophy2025habitica,
+  author    = {{Trophy.so}},
+  title     = {Habitica's Gamification Strategy: A Case Study},
+  url       = {https://trophy.so/blog/habitica-gamification-case-study},
+  year      = {2025},
+  urldate   = {2025-12-17}
+}
+
+@online{trophy2025streaks,
+  author    = {{Trophy.so}},
+  title     = {How Streaks Leverages Gamification to Boost Retention},
+  url       = {https://trophy.so/blog/streaks-gamification-case-study},
+  year      = {2025},
+  urldate   = {2025-12-17}
+}
+
+@online{macstories2023todoist,
+  author    = {Viticci, Federico},
+  title     = {Todoist Launches Smart Schedule, an AI-Based Feature to Reschedule Overdue Tasks},
+  year      = {2023},
+  url       = {https://www.macstories.net/news/todoist-launches-smart-schedule-an-ai-based-feature-to-reschedule-overdue-tasks/},
+  urldate   = {2025-12-12}
+}
+
+@online{reddit2020todoistsmartschedule,
+  author    = {{Reddit Community}},
+  title     = {Smart Scheduling completely disappeared?},
+  year      = {2020},
+  url       = {https://www.reddit.com/r/todoist/comments/gi4t2e/smart_scheduling_completely_disappeared/},
+  urldate   = {2025-12-12},
+  note      = {User discussion thread about Todoist Smart Schedule removal}
+}
+
+@online{todoist2020smartschedule,
+  author    = {{Todoist}},
+  title     = {Reply regarding Smart Schedule accuracy},
+  year      = {2020},
+  url       = {https://x.com/todoist/status/1260030543556603904},
+  urldate   = {2025-12-12},
+  note      = {Official response about Smart Schedule algorithm}
+}
