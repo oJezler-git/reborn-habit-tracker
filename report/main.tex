@@ -776,6 +776,232 @@ The existing market is saturated with tools that record data but can't compute s
 
 
 
+% ================================================================================
+% ----------------------- Focus Group - Primary Research -------------------------
+% ================================================================================
+\newpage
+\subsection{Primary Research}
+
+\subsubsection{Methodology}
+I conducted a \enquote{Whiteboard Focus Group} within my Computer Science class ($n=9$). The participants represent the core demographic: students with high technical literacy but heavy academic workloads. 
+
+I asked the binary question:
+\begin{quote}
+    \enquote{Have you ever abandoned or failed to create a planner/habit app because making/updating it was too much effort?}
+\end{quote}
+
+\subsubsection{Results}
+The raw photographic evidence is available in \hyperref[app:whiteboard_evidence]{\textbf{Appendix~\ref{app:raw_questionnaire_evidence}}}. The results were unanimous.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|l|l|c|c|}
+        \hline
+        \textbf{Response} & \textbf{Visual Tally} & \textbf{Count} & \textbf{Percentage} \\
+        \hline
+        \textbf{Yes} (Too much effort) & \tallyfive \tallyone \tallyone \tallyone \tallyone $^{*}$ & \textbf{9} & \textbf{100\%} \\
+        \hline
+        \textbf{No} (Manageable) & \textit{(No votes recorded)} & 0 & 0\% \\
+        \hline
+    \end{tabular}
+    \caption{Results showing unanimous dissatisfaction with manual tracking.}
+    \label{tab:survey_results}
+\end{table}
+\footnotesize{* One participant drew an infinity symbol ($\infty$) instead of a tally mark. This was counted as a single `Yes' vote.}
+\normalsize
+
+\subsubsection{Analysis and Technical Justification}
+\textbf{Quantitative Analysis:}
+The fact that 100\% of the focus group ($n=9$) voted \enquote{Yes} suggests that \emph{administrative friction} is a universal problem for this demographic. It confirms that relying on user discipline to maintain a database (like Notion) leads to failure. This makes the \textbf{Constraint Satisfaction Scheduler (CSP)} a requirement, as the system must take over the planning process.
+
+\textbf{Qualitative Observation:}
+The participant who used an infinity symbol ($\infty$) instead of a tally is important. It suggests that manual habit tracking feels like a \emph{never-ending} cycle of work without reward. 
+
+This specific observation justifies the need for the \textbf{SM-2 adaptive algorithm}. The system needs to be able to detect this feeling of \emph{infinite load} (from missed check-ins) and mathematically lower the habit frequency to break the cycle of burnout.
+
+
+
+% ================================================================================
+% --------------------- Questionnaire - Primary Research -------------------------
+% ================================================================================
+\newpage
+\subsection{Primary Research Online}
+\label{sec:primary-research-online}
+
+% Here, I used Google Forms to create the survey. The results supported the algorithms that I would be using in the system.
+After the initial focus group, a larger quantitative survey was created using Google Forms to test the hypothesis across a larger sample size. The direct screenshots of the responses are available in \hyperref[app:googleform_theme1]{\textbf{Appendix~\ref{app:raw_questionnaire_evidence}}}.
+
+\subsubsection{Methodology}
+The survey collected \textbf{37 responses}. The distribution was focused on academic communities (A-Level and University), as these groups have high scheduling pressure.
+\begin{itemize}
+    \item \textbf{Demographics:} 51.3\% A-Level Students, 37.8\% University Students, 10.9\% Professionals/Other.
+    \item \textbf{Relevance:} The majority of respondents fit the \enquote{Student/Academic} user profile defined in the Analysis section, so the data is representative of the target audience.
+\end{itemize}
+
+\subsubsection{Theme 1: The \enquote{Administrative Burden} \& Scheduling}
+The findings support the main claim that manual scheduling is a failure point. 
+
+\begin{itemize}
+    \item \textbf{Friction is Fatal:} \textbf{83.8\%} of respondents abandoned a productivity app because keeping it updated was \enquote{too tedious.} 
+    \item \textbf{Decision Fatigue:} \textbf{75.7\%} agreed that the act of planning their day contributes to decision fatigue.
+    \item \textbf{Demand for Automation:} When asked if an intelligent system that automatically rearranges schedules around fixed events would be helpful, \textbf{94.6\%} responded positively (scoring 3 or 4 out of 4).
+\end{itemize}
+
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\vspace{-2\baselineskip}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=\linewidth,
+    ybar,
+    ymin=0,
+    ymax=22,
+    bar width=11pt,
+    xlabel={Helpfulness rating},
+    ylabel={Respondents},
+    symbolic x coords={1,2,3,4},
+    xtick=data,
+    nodes near coords,
+    nodes near coords align={vertical},
+    enlarge x limits=0.12,
+    title={Automatic schedule rearrangement},
+]
+\addplot coordinates {
+    (1,0)
+    (2,2)
+    (3,15)
+    (4,20)
+};
+\end{axis}
+\end{tikzpicture}
+\vspace{-1.5\baselineskip}
+\caption{Automatic schedule helpfulness (n=37)}
+\label{fig:schedule_helpfulness}
+\end{wrapfigure}
+
+
+\textbf{Technical Justification:} 
+These statistics show that a static database (like Notion) is not enough for maintaining habits. The high rate of abandonment from \enquote{tedium} (83.8\%) justifies the use of a \textbf{Constraint Satisfaction Solver (CSP)}. The system must take over the work of \enquote{time-slotting} away from the user to reduce the decision fatigue reported by 75.7\% of the sample.
+
+\clearpage
+\subsubsection{Theme 2: The Failure of \enquote{Streaks} \& Need for Adaptation}
+The survey shows a flaw in current market leaders (e.g., Duolingo, Streaks app) in how they handle consistency.
+
+\begin{itemize}
+    \item \textbf{Streak Fragility:} \textbf{91.3\%} of users felt that traditional streaks do not accurately represent their momentum and described them as \enquote{too fragile.} In addition, \textbf{64.9\%} found streak counters actively stressful.
+    \item \textbf{Burnout:} \textbf{78.4\%} agreed that rigid schedules (e.g., \enquote{Must do daily at 9 AM}) lead to burnout.
+    \item \textbf{Want for Adaptation:} \textbf{89.2\%} of users wanted a system that \enquote{detects when you are struggling and automatically lowers difficulty,} instead of one that just keeps them accountable.
+\end{itemize}
+
+\begin{figure}[ht]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tikzpicture}
+\pie[
+    radius=2.1,
+    text=legend,
+    sum=auto
+]{
+    91.3/No -- too fragile,
+    4.3/Yes -- accurate,
+    4.4/Unsure
+}
+\end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tikzpicture}
+\pie[
+    radius=2.1,
+    text=legend,
+    sum=auto
+]{
+    64.9/Yes,
+    16.2/Sometimes,
+    18.9/No
+}
+\end{tikzpicture}
+\end{minipage}
+
+\caption{User perception of traditional streak mechanisms: perceived fragility (left, $n=23$) and stress induction (right, $n=37$)}
+\label{fig:streak_failure}
+\end{figure}
+
+%%%
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\pie[
+    radius=2.6,
+    text=legend,
+    sum=auto
+]{
+    89.2/Yes -- adapt difficulty automatically,
+    10.8/No -- strict accountability
+}
+\end{tikzpicture}
+\caption{User preference for adaptive difficulty over rigid accountability ($n=37$)}
+\label{fig:adaptive_preference}
+\end{figure}
+
+
+\newpage
+\textbf{Technical Justification:}
+Figures \ref{fig:streak_failure} and \ref{fig:adaptive_preference} show that binary streak counters are do not represent habit stability well. The view of fragility and stress suggests that a fixed-recurrence model is likely to result in demotivation instead of resilience. 
+
+The strong preference for adaptive difficulty (89.2\%) supports the implementation of the \textbf{SM-2 spaced repetition algorithm} with \textbf{logistic regression}. This would allow the system to widen intervals when a higher failure risk is detected. Behavioural momentum is kept going instead of being wiped out by a full reset of progress. 
+
+\subsubsection{Theme 3: Visualisation and Risk Perception}
+The survey also looked at how users perceive their habit stability and what kind of feedback they respond to. 
+
+\begin{itemize}
+    \item \textbf{Invisible Risk:} \textbf{87\%} of users said it is hard to tell the difference between a habit that is \enquote{slightly inconsistent} and one \enquote{at high risk of total relapse} in current apps.
+    \item \textbf{Visualising Decay:} \textbf{83.7\%} said that a dynamic visualisation of \emph{habit decay} would help them prioritise tasks.
+    \item \textbf{The Feedback Split:} When asked to choose between \enquote{Numerical Data} and \enquote{Abstract Visuals,} the results were essentially an even split (\textbf{51.4\% Numerical} vs \textbf{48.6\% Abstract}).
+\end{itemize}
+
+\textbf{Technical Justification:}
+The 87\% difficulty in identifying risk supports the use of the \textbf{physics-inspired simulation} to make \emph{decay} visible. However, the nearly 50/50 split on feedback suggests that using a single visual style (either just graphs or just the simulation) would alienate half of the user base.
+
+\textbf{Design Consequence:}
+This necessitates a \textbf{Dual-Mode Interface}. The system cannot rely solely on a visual \emph{Simulation}. It must implement a \emph{toggleable dashboard} architecture where the user can switch views:
+\begin{enumerate}
+    \item \textbf{Simulation Mode:} A physics-based \emph{Black Hole} view for users who prefer abstract, intuitive risk assessment (48.6\%).
+    \item \textbf{Analytics Mode:} A data-rich dashboard with precision graphs and streak counters for users motivated by raw numbers (51.4\%).
+\end{enumerate}
+
+\newpage
+\subsubsection{Qualitative Feedback Analysis}
+Users were asked for features that do not currently exist. Several responses directly aligned with the proposed complex algorithms:
+
+\begin{quote}
+    \textit{\enquote{To have check-ins that actually do something, some habit trackers I use ask me how I'm doing but... it just logs that and doesn't do anything / change anything.}}
+\end{quote}
+\textbf{Analysis:} This participant is describing the frustration of \emph{passive data logging}. In systems engineering terms, they are criticising open-loop systems where output does not affect input. This explicitly validates the need for a \textbf{closed-loop control system}. It confirms that the \emph{User Interface} must not just act as a database form, but as a sensor for the \textbf{SM-2 algorithm}. Qualitative input (e.g., a difficulty rating) must mathematically alter the system state (future frequency), transforming the application from a passive tracker into an active agent.
+
+\begin{quote}
+    \textit{\enquote{A comprehensive FSRS algorithm in order to perfectly time when to complete tasks.}}
+\end{quote}
+\textbf{Analysis:} The specific request for FSRS (Free Spaced Repetition Scheduler) suggests a target audience that wants mathematical optimisation over simple tracking. FSRS is a modern stochastic model \cite{ye2022stochastic} based on the DSR (Difficulty, Stability, Retrievability) framework, much more complex than standard calendars. While FSRS is designed specifically for memory decay, this feedback is best interpreted as a strong user requirement for \textbf{adaptive efficiency}. It explicitly validates the decision to implement the \textbf{SM-2 algorithm}, satisfying the user's desire for dynamic scheduling while avoiding the complexity overhead of a machine-learning-based memory model for simple habits.
+
+\newpage
+
+\begin{quote}
+    \textit{\enquote{Integration with calendar systems and smart conflict detection for competing commitments.}}
+\end{quote}
+\textbf{Analysis:} This request identifies \emph{Time} as a finite resource that requires management rather than just display. The user's specific terminology---\emph{conflict detection}---implies that the system must handle mutually exclusive events. This elevates the project requirements beyond simple CRUD (Create, Read, Update, Delete) operations and justifies the use of a \textbf{Constraint Satisfaction Problem (CSP)} solver. The system must verify that $\text{Time}(Habit_A) \cap \text{Time}(Commitment_B) = \emptyset$, a logical condition that requires the recursive backtracking algorithm proposed in the solution.
+
+\begin{quote}
+    \textit{\enquote{I would like the ability to toggle all the different features (streaks, visuals, etc) so that i can choose what i want / what i like.}}
+\end{quote}
+\textbf{Analysis:} This qualitative request reinforces the quantitative finding of the \enquote{50/50 split} regarding feedback preferences (Theme 3). It indicates that users have distinct mental models: some require strict data accountability, while others require abstract visual motivation. Technically, this validates a \textbf{Decoupled View Architecture}. The application must separate the \emph{State} (habit performance data) from the \emph{Representation} (UI). This justifies the use of a component-based framework like \textbf{React}, allowing the system to hot-swap between a \enquote{Data Dashboard} and the \emph{simulation engine} without altering the underlying data structure, ensuring the system caters to both user personas simultaneously.
+
+
 % End of new appendices
 
 \newpage
