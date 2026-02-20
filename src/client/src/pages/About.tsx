@@ -77,12 +77,10 @@ const SystemSpec = ({
   label,
   value,
   icon: Icon,
-  delay,
 }: {
   label: string;
   value: string;
   icon: any;
-  delay?: number;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
