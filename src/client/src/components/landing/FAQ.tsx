@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { Plus, Minus } from "lucide-react";
@@ -150,24 +150,25 @@ export function FAQ() {
   // Track which FAQ item is expanded. Null means all are closed.
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  // Reference for the spotlight container to calculate relative mouse positions.
+  /** Reference for the spotlight container — also the injection target for CSS custom properties. */
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // State for the interactive spotlight effect.
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
   /**
-   * Tracks mouse movement within the container to update the radial gradient position.
+   * Updates the spotlight position via CSS custom properties instead of React state.
+   *
+   * Setting `--mx` / `--my` directly on the container element means every
+   * mousemove frame updates the DOM through `style.setProperty` — bypassing
+   * React's reconciliation entirely. The radial gradients consume the values
+   * via `var(--mx)` / `var(--my)`.
    */
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const el = containerRef.current;
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+      el.style.setProperty("--my", `${e.clientY - rect.top}px`);
     }
-  };
+  }, []);
 
   return (
     <section id="faq" className="container py-24 sm:py-32 relative z-10">
@@ -201,7 +202,7 @@ export function FAQ() {
         <div
           className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
           style={{
-            background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.06), transparent 40%)`,
+            background: `radial-gradient(600px circle at var(--mx, 0px) var(--my, 0px), rgba(255,255,255,0.06), transparent 40%)`,
           }}
         />
 
@@ -214,7 +215,7 @@ export function FAQ() {
           className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition duration-500 group-hover:opacity-100"
           style={{
             padding: "1px",
-            background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.4), transparent 40%)`,
+            background: `radial-gradient(400px circle at var(--mx, 0px) var(--my, 0px), rgba(255,255,255,0.4), transparent 40%)`,
             WebkitMask:
               "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             WebkitMaskComposite: "xor",

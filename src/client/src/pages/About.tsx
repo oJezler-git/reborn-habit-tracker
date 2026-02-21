@@ -11,7 +11,13 @@ import {
 } from "lucide-react";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { useEffect, useState, useRef, type ReactNode } from "react";
-import { useInView, motion, AnimatePresence } from "framer-motion";
+import {
+  useInView,
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
 import { PageTransition } from "@/components/PageTransition";
 import {
   APP_VERSION,
@@ -44,29 +50,50 @@ const TV_SCREEN_VARIANTS = {
   },
 };
 
+/**
+ * Magnetic: A spring-physics wrapper that pulls its children toward the cursor.
+ *
+ * Performance: Uses Framer Motion `useMotionValue` + `useSpring` so that
+ * per-frame `mousemove` deltas update the DOM directly through the `style`
+ * prop — bypassing React's render cycle entirely.
+ *
+ * The bounding rect is cached once on `mouseenter` (not recalculated every
+ * frame) since the element doesn't move during the interaction.
+ */
 const Magnetic = ({ children }: { children: ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const rectRef = useRef<DOMRect | null>(null);
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  /** Spring-damped outputs for the organic "pull" feel. */
+  const springX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 });
+  const springY = useSpring(y, { stiffness: 150, damping: 15, mass: 0.1 });
+
+  /** Cache bounding rect once on entry to avoid per-frame layout recalculation. */
+  const handleMouseEnter = () => {
+    rectRef.current = ref.current!.getBoundingClientRect();
+  };
 
   const handleMouse = (e: React.MouseEvent) => {
-    const { clientX, clientY } = e;
-    const { height, width, left, top } = ref.current!.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    setPosition({ x: middleX * 0.2, y: middleY * 0.2 });
+    const rect = rectRef.current!;
+    x.set((e.clientX - rect.left - rect.width / 2) * 0.2);
+    y.set((e.clientY - rect.top - rect.height / 2) * 0.2);
   };
 
   const reset = () => {
-    setPosition({ x: 0, y: 0 });
+    x.set(0);
+    y.set(0);
   };
 
   return (
     <motion.div
       ref={ref}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouse}
       onMouseLeave={reset}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      style={{ x: springX, y: springY }}
     >
       {children}
     </motion.div>
