@@ -12,17 +12,37 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import "./App.css";
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 function App() {
   const location = useLocation();
-  const [showGalaxy, setShowGalaxy] = useState(false);
+
+  /**
+   * Tracks the wrapper div for the galaxy layer.
+   * Used to transition the galaxy in after the shader warm-up is complete.
+   */
+  const galaxyWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const wrapper = galaxyWrapperRef.current;
+    if (!wrapper) return;
+
+    /**
+     * Schedules a short delay before making the galaxy visible. The Galaxy
+     * component is mounted immediately so the browser compiles the WebGL
+     * shaders during the initial load window — a naturally quiet period.
+     * This eliminates the large synchronous compile spike that previously
+     * hit mid-interaction when the component was conditionally mounted
+     * via a 2500 ms setTimeout.
+     *
+     * A 500 ms window is enough for a first rAF tick to trigger the warm-up
+     * draw, after which it is safe to fade the canvas in.
+     */
     const timer = setTimeout(() => {
-      setShowGalaxy(true);
-    }, 2500); // Defer expensive WebGL rendering to improve initial page load
+      wrapper.style.opacity = "1";
+    }, 500);
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -34,28 +54,33 @@ function App() {
       {/* Background layer: ASCII black hole animation */}
       <AsciiAnimation />
 
-      {/* Deferred Galaxy WebGL layer for performance */}
+      {/*
+       * Galaxy WebGL layer — rendered immediately so the browser compiles the
+       * GLSL shaders during the initial load window (a quiet period) rather
+       * than in a deferred setTimeout that previously fired mid-interaction.
+       * Visual presence is gated behind a short 500 ms opacity transition so
+       * the user never sees the raw warm-up frame.
+       */}
       <div
+        ref={galaxyWrapperRef}
         className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-1000"
-        style={{ opacity: showGalaxy ? 1 : 0 }}
+        style={{ opacity: 0 }}
       >
-        {showGalaxy && (
-          <Galaxy
-            mouseRepulsion={true}
-            mouseInteraction={true}
-            density={0.5}
-            glowIntensity={0.3}
-            saturation={0}
-            hueShift={140}
-            twinkleIntensity={0.3}
-            rotationSpeed={0.1}
-            repulsionStrength={2}
-            autoCenterRepulsion={0}
-            starSpeed={0.5}
-            speed={1}
-            transparent={true}
-          />
-        )}
+        <Galaxy
+          mouseRepulsion={true}
+          mouseInteraction={true}
+          density={0.5}
+          glowIntensity={0.3}
+          saturation={0}
+          hueShift={140}
+          twinkleIntensity={0.3}
+          rotationSpeed={0.1}
+          repulsionStrength={2}
+          autoCenterRepulsion={0}
+          starSpeed={0.5}
+          speed={1}
+          transparent={true}
+        />
       </div>
 
       {/* Grid overlay and ambient gradients */}
