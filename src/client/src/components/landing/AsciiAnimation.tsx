@@ -33,6 +33,7 @@ export function AsciiAnimation() {
   const framesRef = useRef<string[]>([FALLBACK_FRAME]);
   const frameIndexRef = useRef(0);
   const animationRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTimeRef = useRef<number>(0);
 
   // Typewriter effect state - reveals animation character by character on initial load
@@ -62,6 +63,7 @@ export function AsciiAnimation() {
 
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
 
@@ -118,13 +120,24 @@ export function AsciiAnimation() {
         }
       }
 
-      animationRef.current = requestAnimationFrame(renderLoop);
+      if (isTypingRef.current) {
+        // During typewriter: run at full 60fps for smooth character reveal
+        animationRef.current = requestAnimationFrame(renderLoop);
+      } else {
+        // Post-typewriter: sleep until the next 12fps tick, then wake for a single
+        // RAF frame. This drops main-thread usage from continuous 60fps polling to
+        // ~12 brief wake-ups per second.
+        timerRef.current = setTimeout(() => {
+          animationRef.current = requestAnimationFrame(renderLoop);
+        }, interval);
+      }
     };
 
     animationRef.current = requestAnimationFrame(renderLoop);
 
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [interval]);
 

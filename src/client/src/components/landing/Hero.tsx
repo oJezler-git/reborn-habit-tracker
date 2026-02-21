@@ -21,6 +21,7 @@ export function Hero() {
           variant="outline"
           className="mb-4 bg-primary/10 backdrop-blur-md border-primary/20 px-4 py-1.5 text-xs font-mono tracking-widest rounded-full text-primary animate-in fade-in slide-in-from-bottom-4 duration-1000 uppercase"
         >
+          {/* Populated by package.json */}
           {APP_RELEASE_LABEL}
         </Badge>
 
