@@ -19,6 +19,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { PageTransition } from "@/components/PageTransition";
+import { usePauseOffscreen } from "@/hooks/usePauseOffscreen";
 import {
   APP_VERSION,
   APP_VERSION_LABEL,
@@ -221,9 +222,10 @@ const TerminalWindow = () => {
   const [isMinimized, setIsMinimized] = useState(false);
   const [isRebooting, setIsRebooting] = useState(false);
   const [restartKey, setRestartKey] = useState(0); // Used to force re-run
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  usePauseOffscreen(containerRef);
 
   useEffect(() => {
     if (scrollRef.current && !isMinimized) {

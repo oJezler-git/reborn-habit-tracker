@@ -69,7 +69,9 @@ export function AsciiAnimation() {
   }, []);
 
   useEffect(() => {
+    let isVisible = true;
     const renderLoop = (time: number) => {
+      if (!isVisible) return;
       let shouldUpdate = false;
 
       // Update frame at 12 FPS is good enough for ASCII
@@ -134,9 +136,27 @@ export function AsciiAnimation() {
       }
     };
 
-    animationRef.current = requestAnimationFrame(renderLoop);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          if (animationRef.current) cancelAnimationFrame(animationRef.current);
+          if (timerRef.current) clearTimeout(timerRef.current);
+          animationRef.current = requestAnimationFrame(renderLoop);
+        } else {
+          if (animationRef.current) cancelAnimationFrame(animationRef.current);
+          if (timerRef.current) clearTimeout(timerRef.current);
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
 
     return () => {
+      observer.disconnect();
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       if (timerRef.current) clearTimeout(timerRef.current);
     };

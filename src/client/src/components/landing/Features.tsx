@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import { TextAnimate } from "@/components/ui/text-animate";
+import { usePauseOffscreen } from "@/hooks/usePauseOffscreen";
 import {
   Brain,
   Calendar,
@@ -156,6 +157,9 @@ const FeatureCard = ({
  * like CSP solving, PCS forecasting, and the SM-2 adaptive algorithm.
  */
 export function Features() {
+  const sectionRef = useRef<HTMLElement>(null);
+  usePauseOffscreen(sectionRef);
+
   /**
    * Feature definitions.
    * These reflect the system's focus on technical optimisation (and privacy ig).
@@ -209,6 +213,7 @@ export function Features() {
   return (
     <section
       id="features"
+      ref={sectionRef}
       className="container space-y-12 py-8 md:py-12 lg:py-24"
     >
       <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center mb-8">

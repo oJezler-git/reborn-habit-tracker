@@ -2,6 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { APP_RELEASE_LABEL, APP_TAGLINE } from "@/lib/constants";
+import { useRef } from "react";
+import { usePauseOffscreen } from "@/hooks/usePauseOffscreen";
 
 import { TextAnimate } from "@/components/ui/text-animate";
 
@@ -13,8 +15,14 @@ import { TextAnimate } from "@/components/ui/text-animate";
  * It serves as the visual anchor for the top of the site.
  */
 export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  usePauseOffscreen(sectionRef);
+
   return (
-    <section className="container flex flex-col items-center justify-center gap-6 pb-8 pt-6 md:min-h-screen relative z-10">
+    <section
+      ref={sectionRef}
+      className="container flex flex-col items-center justify-center gap-6 pb-8 pt-6 md:min-h-screen relative z-10"
+    >
       <div className="flex max-w-[980px] flex-col items-center gap-4 text-center relative z-10">
         {/* Current release label badge with subtle entrance animation */}
         <Badge

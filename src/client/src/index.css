@@ -362,6 +362,11 @@
 
 /* Liquid Glass Utilities */
 @layer utilities {
+  .pause-animations,
+  .pause-animations * {
+    animation-play-state: paused !important;
+  }
+
   .glass-liquid {
     @apply relative overflow-hidden;
     transition:

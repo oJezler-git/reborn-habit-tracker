@@ -354,7 +354,10 @@ export default function Galaxy({
     const mesh = new Mesh(gl, { geometry, program });
     let animateId: number;
 
+    let isVisible = true;
+
     function update(t: number) {
+      if (!isVisible) return;
       animateId = requestAnimationFrame(update);
       if (!disableAnimation) {
         program.uniforms.uTime.value = t * 0.001;
@@ -383,7 +386,21 @@ export default function Galaxy({
 
       renderer.render({ scene: mesh });
     }
-    animateId = requestAnimationFrame(update);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          if (animateId) cancelAnimationFrame(animateId);
+          animateId = requestAnimationFrame(update);
+        } else {
+          if (animateId) cancelAnimationFrame(animateId);
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(ctn);
+
     ctn.appendChild(gl.canvas);
 
     function handleMouseMove(e: MouseEvent) {
@@ -405,6 +422,7 @@ export default function Galaxy({
     }
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animateId);
       window.removeEventListener("resize", resize);
       if (mouseInteraction) {
