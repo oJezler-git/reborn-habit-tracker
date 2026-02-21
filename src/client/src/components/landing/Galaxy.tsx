@@ -1,5 +1,6 @@
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
+import { useThrottledScroll } from "@/hooks/useThrottledScroll";
 
 /**
  * Vertex shader for the galaxy background.
@@ -438,25 +439,18 @@ export default function Galaxy({
    * This ensures the background is subtle at the top of the page and gains full
    * presence as the user enters the main content area.
    */
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!ctnDom.current) return;
-      const scrollY = window.scrollY;
-      const startOpacity = 0.1;
-      const endOpacity = 1.0;
-      const fadeDistance = 600;
+  useThrottledScroll((scrollY: number) => {
+    if (!ctnDom.current) return;
+    const startOpacity = 0.1;
+    const endOpacity = 1.0;
+    const fadeDistance = 600;
 
-      // Gradually increase opacity from 0.1 to 1.0 over the defined scroll distance
-      const progress = Math.min(1, scrollY / fadeDistance);
-      const newOpacity = startOpacity + (endOpacity - startOpacity) * progress;
+    // Gradually increase opacity from 0.1 to 1.0 over the defined scroll distance
+    const progress = Math.min(1, scrollY / fadeDistance);
+    const newOpacity = startOpacity + (endOpacity - startOpacity) * progress;
 
-      ctnDom.current.style.opacity = newOpacity.toString();
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initialise the state immediately on mount
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    ctnDom.current.style.opacity = newOpacity.toString();
+  });
 
   return (
     <div

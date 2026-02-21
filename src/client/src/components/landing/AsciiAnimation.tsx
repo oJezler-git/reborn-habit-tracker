@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useThrottledScroll } from "@/hooks/useThrottledScroll";
 import { FALLBACK_FRAME } from "./ascii_fallback";
 
 // Load appropriate JSON file based on device tier (L/M/H quality levels)
@@ -141,24 +142,17 @@ export function AsciiAnimation() {
     };
   }, [interval]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const scrollY = window.scrollY;
-      const startOpacity = 0.3;
-      const fadeDistance = 600;
-      // Fade out animation as user scrolls to keep focus on content
-      const newOpacity = Math.max(
-        0,
-        startOpacity - (scrollY / fadeDistance) * startOpacity,
-      );
-      containerRef.current.style.opacity = newOpacity.toString();
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial set
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  useThrottledScroll((scrollY: number) => {
+    if (!containerRef.current) return;
+    const startOpacity = 0.3;
+    const fadeDistance = 600;
+    // Fade out animation as user scrolls to keep focus on content
+    const newOpacity = Math.max(
+      0,
+      startOpacity - (scrollY / fadeDistance) * startOpacity,
+    );
+    containerRef.current.style.opacity = newOpacity.toString();
+  });
 
   return (
     <div
