@@ -42,9 +42,10 @@ export function useThrottledScroll(callback: ScrollCallback) {
     listeners.add(wrappedCallback);
 
     // Initial call to set state
-    requestAnimationFrame(() => wrappedCallback(window.scrollY));
+    const rafId = requestAnimationFrame(() => wrappedCallback(window.scrollY));
 
     return () => {
+      cancelAnimationFrame(rafId);
       listeners.delete(wrappedCallback);
       if (listeners.size === 0) {
         window.removeEventListener("scroll", handleScroll);

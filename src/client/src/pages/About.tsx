@@ -224,8 +224,15 @@ const TerminalWindow = () => {
   const [restartKey, setRestartKey] = useState(0); // Used to force re-run
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const rebootTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
   usePauseOffscreen(containerRef);
+
+  useEffect(() => {
+    return () => {
+      if (rebootTimerRef.current) clearTimeout(rebootTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current && !isMinimized) {
@@ -378,7 +385,8 @@ const TerminalWindow = () => {
     setIsRebooting(true);
     setLines([]);
     // Simulate BIOS boot
-    setTimeout(() => {
+    if (rebootTimerRef.current) clearTimeout(rebootTimerRef.current);
+    rebootTimerRef.current = setTimeout(() => {
       setIsRebooting(false);
       setRestartKey((prev) => prev + 1);
     }, 2500);
